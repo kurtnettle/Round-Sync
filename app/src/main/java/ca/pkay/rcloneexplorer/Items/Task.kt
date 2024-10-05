@@ -15,11 +15,13 @@ data class Task(var id: Long) {
     var remotePath = ""
     var localPath = ""
     @JsonNames("syncDirection") var direction = 0
+    var cmd = ""
+    var cmd_flags = ""
     var md5sum = TASK_MD5SUM_DEFAULT
     var wifionly = TASK_WIFIONLY_DEFAULT
 
     override fun toString(): String {
-        return "$title: $remoteId: $remoteType: $remotePath: $localPath: $direction"
+        return "$title: $remoteId: $remoteType: $remotePath: $localPath: $direction: $cmd: $cmd_flags"
     }
 
     companion object {
@@ -31,6 +33,8 @@ data class Task(var id: Long) {
         var COLUMN_NAME_REMOTE_PATH = "task_remote_path"
         var COLUMN_NAME_LOCAL_PATH = "task_local_path"
         var COLUMN_NAME_SYNC_DIRECTION = "task_direction"
+        var COLUMN_NAME_CMD = "task_cmd"
+        var COLUMN_NAME_CMD_FLAGS = "task_cmd_flags"
         var COLUMN_NAME_MD5SUM = "task_use_md5sum"
         var COLUMN_NAME_WIFI_ONLY = "task_use_only_wifi"
 

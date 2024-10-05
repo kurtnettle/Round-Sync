@@ -70,48 +70,21 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         RemoteItem remote = new RemoteItem(selectedTask.getRemoteId(), String.valueOf(selectedTask.getRemoteType()));
 
         holder.taskIcon.setImageDrawable(AppCompatResources.getDrawable(context, remote.getRemoteIcon(selectedTask.getRemoteType())));
+        holder.taskSyncDirection.setText(selectedTask.getCmd());
 
         int direction = selectedTask.getDirection();
-
-        if(direction == SyncDirectionObject.SYNC_LOCAL_TO_REMOTE || direction == SyncDirectionObject.COPY_LOCAL_TO_REMOTE){
+        if((direction+6) == SyncDirectionObject.LOCAL_TO_REMOTE) {
             holder.fromID.setVisibility(View.GONE);
             holder.fromPath.setText(selectedTask.getLocalPath());
 
             holder.toID.setText(String.format("%s:", selectedTask.getRemoteId()));
             holder.toPath.setText(selectedTask.getRemotePath());
-        }
-
-        if(direction == SyncDirectionObject.SYNC_REMOTE_TO_LOCAL || direction == SyncDirectionObject.COPY_REMOTE_TO_LOCAL){
+        } else if((direction+6) == SyncDirectionObject.REMOTE_TO_LOCAL)  {
             holder.fromID.setText(String.format("%s:", selectedTask.getRemoteId()));
             holder.fromPath.setText(selectedTask.getRemotePath());
 
             holder.toID.setVisibility(View.GONE);
             holder.toPath.setText(selectedTask.getLocalPath());
-        }
-
-        if(direction == SyncDirectionObject.SYNC_BIDIRECTIONAL || direction == SyncDirectionObject.SYNC_BIDIRECTIONAL_INITIAL){
-            holder.fromID.setText(String.format("%s:", selectedTask.getRemoteId()));
-            holder.fromPath.setText(selectedTask.getRemotePath());
-
-            holder.toID.setVisibility(View.GONE);
-            holder.toPath.setText(selectedTask.getLocalPath());
-
-            holder.to.setText(this.context.getString(R.string.task_item_label_to_bisync));
-            holder.from.setText(this.context.getString(R.string.task_item_label_from_bisync));
-        }
-
-        switch (direction){
-            case SyncDirectionObject.COPY_LOCAL_TO_REMOTE:
-            case SyncDirectionObject.COPY_REMOTE_TO_LOCAL:
-                holder.taskSyncDirection.setText(view.getResources().getString(R.string.copy));
-                break;
-            case SyncDirectionObject.SYNC_BIDIRECTIONAL_INITIAL:
-            case SyncDirectionObject.SYNC_BIDIRECTIONAL:
-                holder.taskSyncDirection.setText(view.getResources().getString(R.string.bisync));
-                break;
-            default:
-                holder.taskSyncDirection.setText(view.getResources().getString(R.string.sync));
-                break;
         }
 
         holder.fileOptions.setOnClickListener(v-> {
@@ -239,7 +212,7 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(EXTRA_TASK_ID, task.getId());
 
-        String id = String.valueOf(task.getTitle()+task.getLocalPath()+task.getRemotePath()+task.getDirection());
+        String id = task.getTitle() + task.getLocalPath() + task.getRemotePath() + task.getDirection();
         ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(c, id)
                 .setShortLabel(task.getTitle())
                 .setLongLabel(task.getRemotePath())

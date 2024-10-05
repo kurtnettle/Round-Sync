@@ -117,6 +117,8 @@ class DatabaseHandler(context: Context?) :
             Task.COLUMN_NAME_REMOTE_PATH,
             Task.COLUMN_NAME_LOCAL_PATH,
             Task.COLUMN_NAME_SYNC_DIRECTION,
+            Task.COLUMN_NAME_CMD,
+            Task.COLUMN_NAME_CMD_FLAGS,
             Task.COLUMN_NAME_MD5SUM,
             Task.COLUMN_NAME_WIFI_ONLY
         )
@@ -129,8 +131,10 @@ class DatabaseHandler(context: Context?) :
         task.remotePath = cursor.getString(4)
         task.localPath = cursor.getString(5)
         task.direction = cursor.getInt(6)
-        task.md5sum = getBoolean(cursor, 7)
-        task.wifionly = getBoolean(cursor, 8)
+        task.cmd = cursor.getString(7)
+        task.cmd_flags = cursor.getString(8)
+        task.md5sum = getBoolean(cursor, 9)
+        task.wifionly = getBoolean(cursor, 10)
         return task
     }
 
@@ -157,6 +161,8 @@ class DatabaseHandler(context: Context?) :
         values.put(Task.COLUMN_NAME_REMOTE_PATH, task.remotePath)
         values.put(Task.COLUMN_NAME_REMOTE_TYPE, task.remoteType)
         values.put(Task.COLUMN_NAME_SYNC_DIRECTION, task.direction)
+        values.put(Task.COLUMN_NAME_CMD, task.cmd)
+        values.put(Task.COLUMN_NAME_CMD_FLAGS, task.cmd_flags)
         values.put(Task.COLUMN_NAME_MD5SUM, task.md5sum)
         values.put(Task.COLUMN_NAME_WIFI_ONLY, task.wifionly)
         return values

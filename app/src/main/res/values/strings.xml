@@ -354,9 +354,12 @@
     <string name="task_edit_label_local">Local Storage Path</string>
     <string name="task_edit_label_remote">Remote Storage Path</string>
     <string name="task_edit_label_direction">Direction</string>
+    <string name="task_edit_label_custom_cmd_flags">Custom Command and Flags</string>
     <string name="task_edit_hint_title">Title</string>
     <string name="task_edit_hint_local">Local Path</string>
     <string name="task_edit_hint_remote">Remote Path</string>
+    <string name="task_edit_hint_cmd">rclone cmd</string>
+    <string name="task_edit_hint_cmd_flags">rclone cmd flags</string>
     <string name="rcd_service_notification_running_in_background">Rclone runs in the background</string>
     <string name="rcd_service_notification_no_active_jobs">No active jobs.</string>
     <string name="rcd_service_notification_btn_stop_all">Stop All</string>
@@ -469,6 +472,7 @@
     <string name="description_sync_direction_copy_toremote">Copy new or modified files from local storage to remote storage. No files are deleted, existing files on the remote may be overwritten.</string>
     <string name="description_sync_direction_copy_tolocal">Copy new or modified files from remote storage to local storage. No files are deleted, existing files on the local storage may be overwritten.</string>
     <string name="description_sync_direction_sync_bidirectional">Make sure local and remote storage have the same files by transferring, downloading, and deleting files as needed to maintain an identical folder structure.</string>
+    <string name="description_custom_cmd_flags">Visit the official Rclone website for a complete list of supported commands and their corresponding flags, tailored to each storage system.</string>
     <string name="intro_success">Success!</string>
     <string name="intro_successful_setup">You are now ready to start!</string>
     <string name="status_offendingfile">"The offending File: "</string>
@@ -603,4 +607,8 @@
     <string name="pref_proxy_password">Password</string>
     <string name="intro_update_checks_title">Update Notifications</string>
     <string name="intro_update_checks_description">If you want to recieve updates, you can enable the switch below! We will notify if an update is available, and you can then choose to apply it.</string>
+    <string name="sync_direction_local_to_remote">Local to Remote</string>
+    <string name="sync_direction_remote_to_local">Remote to Local</string>
+    <string name="task_data_validation_error_no_rclone_cmd">You have not entered any rclone command yet</string>
+
 </resources>

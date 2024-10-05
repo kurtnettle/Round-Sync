@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import ca.pkay.rcloneexplorer.Database.DatabaseHandler
@@ -29,15 +30,18 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
     private lateinit var rcloneInstance: Rclone
     private lateinit var dbHandler: DatabaseHandler
 
-    private lateinit var syncDescription: TextView
     private lateinit var remotePath: EditText
     private lateinit var localPath: EditText
     private lateinit var remoteDropdown: Spinner
     private lateinit var syncDirection: Spinner
+
+    private lateinit var cmd: EditText
+    private lateinit var cmd_flags: EditText
+
     private lateinit var fab: FloatingActionButton
 
-    private lateinit var switchWifi: Switch
-    private lateinit var switchMD5sum: Switch
+    private lateinit var switchWifi: SwitchCompat
+    private lateinit var switchMD5sum: SwitchCompat
 
 
     private var existingTask: Task? = null
@@ -94,7 +98,8 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
         localPath = findViewById(R.id.task_local_path_textfield)
         remoteDropdown = findViewById(R.id.task_remote_spinner)
         syncDirection = findViewById(R.id.task_direction_spinner)
-        syncDescription = findViewById(R.id.descriptionSyncDirection)
+        cmd = findViewById(R.id.task_custom_cmd)
+        cmd_flags = findViewById(R.id.task_custom_cmd_flags)
         fab = findViewById(R.id.saveButton)
         switchWifi = findViewById(R.id.task_wifionly)
         switchMD5sum = findViewById(R.id.task_md5sum)
@@ -130,6 +135,8 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
         switchWifi.isChecked = existingTask?.wifionly ?: false
         switchMD5sum.isChecked = existingTask?.md5sum ?: false
         prepareSyncDirectionDropdown()
+        prepareCmd()
+        prepareCmdFlags()
         prepareLocal()
         prepareRemote()
 
@@ -181,10 +188,22 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
         taskToPopulate.localPath = localPath.text.toString()
         taskToPopulate.direction = direction
 
+        taskToPopulate.cmd = cmd.text.toString()
+        taskToPopulate.cmd_flags = cmd_flags.text.toString()
+
         taskToPopulate.wifionly = switchWifi.isChecked
         taskToPopulate.md5sum = switchMD5sum.isChecked
 
         // Verify if data is completed
+        if (cmd.text.toString() == "") {
+            Toasty.error(
+                this.applicationContext,
+                getString(R.string.task_data_validation_error_no_rclone_cmd),
+                Toast.LENGTH_SHORT,
+                true
+            ).show()
+            return null
+        }
         if (localPath.text.toString() == "") {
             Toasty.error(
                 this.applicationContext,
@@ -219,6 +238,18 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
         remotePathHolder = path
         remotePath.setText(remotePathHolder)
         fab.visibility = View.VISIBLE
+    }
+
+    private fun prepareCmd() {
+        existingTask.let {
+            cmd.setText(it?.cmd ?: "")
+        }
+    }
+
+    private fun prepareCmdFlags() {
+        existingTask.let {
+            cmd_flags.setText(it?.cmd_flags ?: "")
+        }
     }
 
     private fun prepareLocal() {
@@ -277,36 +308,7 @@ class TaskActivity : AppCompatActivity(), FolderSelectorCallback {
         val directionAdapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, options)
         syncDirection.adapter = directionAdapter
-        syncDirection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View,
-                position: Int,
-                id: Long
-            ) {
-                updateSpinnerDescription(position + 1)
-            }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
-        }
         syncDirection.setSelection((((existingTask?.direction?.minus(1)) ?: 0)) )
-    }
-
-    private fun updateSpinnerDescription(value: Int) {
-        var text = getString(R.string.description_sync_direction_sync_toremote)
-        when (value) {
-            SyncDirectionObject.SYNC_LOCAL_TO_REMOTE -> text =
-                getString(R.string.description_sync_direction_sync_toremote)
-            SyncDirectionObject.SYNC_REMOTE_TO_LOCAL -> text =
-                getString(R.string.description_sync_direction_sync_tolocal)
-            SyncDirectionObject.COPY_LOCAL_TO_REMOTE -> text =
-                getString(R.string.description_sync_direction_copy_toremote)
-            SyncDirectionObject.COPY_REMOTE_TO_LOCAL -> text =
-                getString(R.string.description_sync_direction_copy_tolocal)
-            SyncDirectionObject.SYNC_BIDIRECTIONAL -> text =
-                getString(R.string.description_sync_direction_sync_bidirectional)
-        }
-        syncDescription.text = text
     }
 
     companion object {

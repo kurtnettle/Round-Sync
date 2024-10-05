@@ -19,7 +19,9 @@ class DatabaseInfo {
                 Task.COLUMN_NAME_REMOTE_TYPE + " INTEGER," +
                 Task.COLUMN_NAME_REMOTE_PATH + " TEXT," +
                 Task.COLUMN_NAME_LOCAL_PATH + " TEXT," +
-                Task.COLUMN_NAME_SYNC_DIRECTION + " INTEGER)"
+                Task.COLUMN_NAME_SYNC_DIRECTION + " INTEGER," +
+                Task.COLUMN_NAME_CMD + " TEXT," +
+                Task.COLUMN_NAME_CMD_FLAGS + " TEXT)"
 
         val SQL_CREATE_TABLE_TRIGGER = "CREATE TABLE " + Trigger.TABLE_NAME + " (" +
                 Trigger.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +

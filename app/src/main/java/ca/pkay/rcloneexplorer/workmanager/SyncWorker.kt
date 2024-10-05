@@ -158,10 +158,7 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         if(arePreconditionsMet()) {
             sRcloneProcess = mRclone.sync(
                 remoteItem,
-                mTask.localPath,
-                mTask.remotePath,
-                mTask.direction,
-                mTask.md5sum
+                mTask
             )
             handleSync(mTitle)
             sendUploadFinishedBroadcast(remoteItem.name, mTask.remotePath)

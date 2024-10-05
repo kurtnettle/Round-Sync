@@ -36,6 +36,9 @@ public class SyncDirectionObject {
     public static final int SYNC_BIDIRECTIONAL_INITIAL = 5;
     public static final int SYNC_BIDIRECTIONAL = 6;
 
+    public static final int LOCAL_TO_REMOTE = 7;
+    public static final int REMOTE_TO_LOCAL = 8;
+
 
     public static String[] getOptionsArray(Context context) {
         return context.getResources().getStringArray(R.array.sync_direction_array);
