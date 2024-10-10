@@ -17,9 +17,6 @@
 //  - go 1.20+
 //  - Either Android SDK command-line tools, or the expected NDK version (see gradle.properties).
 
-
-import groovy.json.JsonSlurper
-
 import java.nio.file.Paths
 
 ext {
@@ -37,11 +34,6 @@ ext {
 }
 
 def findSdkDir() {
-    def androidHome = System.getenv('ANDROID_HOME')
-    if (androidHome != null) {
-        return androidHome
-    }
-
     def localPropertiesFile = project.rootProject.file('local.properties')
     if (localPropertiesFile.exists()) {
         Properties properties = new Properties()
@@ -50,13 +42,14 @@ def findSdkDir() {
         if (sdkDir != null) {
             return sdkDir
         }
+    } else {
+        def androidHome = System.getenv('ANDROID_HOME')
+        if (androidHome != null) {
+            return androidHome
+        }
     }
 
-    throw new GradleException(
-        "Couldn't locate your android SDK. Make sure you set sdk.dir property"
-        + " in your local.properties at the root of the project or set"
-        + " ANDROID_HOME environment variable."
-    )
+    throw new GradleException("Couldn't locate your android SDK. Make sure you set sdk.dir property" + " in your local.properties at the root of the project or set" + " ANDROID_HOME environment variable.")
 }
 
 def findNdkDir() {
@@ -64,13 +57,11 @@ def findNdkDir() {
     def ndkPath = Paths.get(sdkDir, 'ndk', NDK_VERSION).toAbsolutePath()
     if (!ndkPath.toFile().exists()) {
         // NDK not found. Let's try to install it.
-        def sdkManagerPath = Paths.get(
-            sdkDir,
-            'cmdline-tools',
-            'latest',
-            'bin',
-            'sdkmanager'
-        ).toString()
+        def sdkManagerPath = Paths.get(sdkDir,
+                'cmdline-tools',
+                'latest',
+                'bin',
+                'sdkmanager').toString()
         if (System.properties['os.name'].startsWith('Windows')) {
             sdkManagerPath += '.bat'
         }
@@ -81,11 +72,7 @@ def findNdkDir() {
         } catch (exc) {
             logger.error(exc.toString())
             // NDK installation failed. Just raise an error.
-            throw new GradleException(
-                "Couldn't find a ndk bundle in ${ndkPath.toString()}. Make sure that you have the"
-                + " proper version installed in Android Studio's SDK Manager or run"
-                + " \"${sdkManagerPath} --install 'ndk;${NDK_VERSION}'\"."
-            )
+            throw new GradleException("Couldn't find a ndk bundle in ${ndkPath.toString()}. Make sure that you have the" + " proper version installed in Android Studio's SDK Manager or run" + " \"${sdkManagerPath} --install 'ndk;${NDK_VERSION}'\".")
         }
     }
     return ndkPath.toString()
@@ -109,22 +96,18 @@ def getCrossCompiler(abi) {
         throw new GradleException('Unsupported host OS or architecture.')
     }
 
-    def abiToCompiler = [
-        'armeabi-v7a': "armv7a-linux-androideabi${NDK_TOOLCHAIN_VERSION}-clang",
-        'arm64-v8a': "aarch64-linux-android${NDK_TOOLCHAIN_VERSION}-clang",
-        'x86': "i686-linux-android${NDK_TOOLCHAIN_VERSION}-clang",
-        'x86_64': "x86_64-linux-android${NDK_TOOLCHAIN_VERSION}-clang",
-    ]
+    def abiToCompiler = ['armeabi-v7a': "armv7a-linux-androideabi${NDK_TOOLCHAIN_VERSION}-clang",
+                         'arm64-v8a'  : "aarch64-linux-android${NDK_TOOLCHAIN_VERSION}-clang",
+                         'x86'        : "i686-linux-android${NDK_TOOLCHAIN_VERSION}-clang",
+                         'x86_64'     : "x86_64-linux-android${NDK_TOOLCHAIN_VERSION}-clang",]
 
-    return Paths.get(
-        findNdkDir(),
-        'toolchains',
-        'llvm',
-        'prebuilt',
-        os,
-        'bin',
-        abiToCompiler[abi],
-    )
+    return Paths.get(findNdkDir(),
+            'toolchains',
+            'llvm',
+            'prebuilt',
+            os,
+            'bin',
+            abiToCompiler[abi],)
 }
 
 def getOutputPath(abi) {
@@ -132,12 +115,10 @@ def getOutputPath(abi) {
 }
 
 def buildRclone(abi) {
-    def abiToEnv = [
-        'armeabi-v7a': ['GOARCH': 'arm', 'GOARM': '7'],
-        'arm64-v8a': ['GOARCH': 'arm64'],
-        'x86': ['GOARCH': '386'],
-        'x86_64': ['GOARCH': 'amd64'],
-    ]
+    def abiToEnv = ['armeabi-v7a': ['GOARCH': 'arm', 'GOARM': '7'],
+                    'arm64-v8a'  : ['GOARCH': 'arm64'],
+                    'x86'        : ['GOARCH': '386'],
+                    'x86_64'     : ['GOARCH': 'amd64'],]
 
     return {
         doLast {
@@ -149,21 +130,19 @@ def buildRclone(abi) {
                 environment 'GOOS', 'android'
                 environment 'CGO_ENABLED', '1'
                 environment 'CGO_LDFLAGS', '-fuse-ld=lld -Wl,--hash-style=both -s'
-                abiToEnv[abi].each {entry -> environment entry.key, entry.value}
+                abiToEnv[abi].each { entry -> environment entry.key, entry.value }
                 workingDir CACHE_PATH
                 def ldflags = "-buildid= -X github.com/rclone/rclone/fs.Version=${RCLONE_VERSION}${RCLONE_CUSTOM_VERSION_SUFFIX}"
-                commandLine (
-                    'go',
-                    'build',
-                    '-tags',
-                    'android noselfupdate',
-                    '-trimpath',
-                    '-ldflags',
-                    ldflags,
-                    '-o',
-                    getOutputPath(abi),
-                    RCLONE_MODULE
-                )
+                commandLine('go',
+                        'build',
+                        '-tags',
+                        'android noselfupdate',
+                        '-trimpath',
+                        '-ldflags',
+                        ldflags,
+                        '-o',
+                        getOutputPath(abi),
+                        RCLONE_MODULE)
             }
         }
     }
@@ -184,16 +163,16 @@ task checkoutRclone(type: Exec, dependsOn: createRcloneModule) {
     environment 'GOPATH', GOPATH
 
     def goVersionOutput = new ByteArrayOutputStream()
-    exec{
+    exec {
         commandLine 'go', 'version'
-        standardOutput = goVersionOutput;
+        standardOutput = goVersionOutput
     }
 
     if (goVersionOutput.toString().contains(GO_REQ_VERSION)) {
         println "You are running the required go version."
     } else {
         logger.error("The requred go version is: ${GO_REQ_VERSION}")
-        logger.error( "You are running: ${goVersionOutput}")
+        logger.error("You are running: ${goVersionOutput}")
     }
     println "You are building rclone v${RCLONE_VERSION}"
 

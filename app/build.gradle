@@ -22,7 +22,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "java.lang.String", "CLI", System.getenv('RCX_BUILD_CLI') ? System.getenv('RCX_BUILD_CLI') : "\"c03129b6-b09f-9cb4-8fcd-7f143b8f94ef\""
         buildConfigField "java.lang.String", "VCP_AUTHORITY", "\"" + applicationId + ".vcp\"";
-        setProperty("archivesBaseName",  "roundsync_v"+versionName)
+        setProperty("archivesBaseName", "roundsync_v" + versionName)
 
         externalNativeBuild {
             ndkBuild {
@@ -40,7 +40,7 @@ android {
             minifyEnabled false
             shrinkResources false
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_launcher_debug",
+                    appIcon     : "@mipmap/ic_launcher_debug",
                     appIconRound: "@mipmap/ic_launcher_debug_round"
             ]
         }
@@ -49,7 +49,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_launcher",
+                    appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
             signingConfig signingConfigs.release
@@ -84,10 +84,10 @@ android {
     }
 
     project.ext.versionCodes = [
-        'armeabi-v7a': 6,
-        'arm64-v8a'  : 7,
-        'x86'        : 8,
-        'x86_64'     : 9
+            'armeabi-v7a': 6,
+            'arm64-v8a'  : 7,
+            'x86'        : 8,
+            'x86_64'     : 9
     ]
 
     android.applicationVariants.all { variant ->
@@ -177,6 +177,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
     implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     // REST Client
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
