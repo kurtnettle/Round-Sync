@@ -28,6 +28,11 @@
             android:icon="@drawable/ic_twotone_error_24"
             android:title="@string/permissionFragment"
             android:visible="false" />
+        <item
+            android:id="@+id/nav_webgui"
+            android:icon="@drawable/ic_web_24"
+            android:title="@string/webGuiFragment"
+            android:visible="true" />
     </group>
 
     <item

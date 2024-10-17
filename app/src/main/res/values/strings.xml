@@ -611,4 +611,26 @@
     <string name="sync_direction_remote_to_local">Remote to Local</string>
     <string name="task_data_validation_error_no_rclone_cmd">You have not entered any rclone command yet</string>
 
+    <!-- -->
+    <string name="webGuiFragment">Web GUI</string>
+    <string name="web_gui_setting_title">Web GUI</string>
+    <string name="web_gui_setting_desc">Configure the web server</string>
+    <string name="web_gui_setting_icon_desc">Web settings icon</string>
+
+    <string name="web_gui_setting_category_authentication">Authentication</string>
+    <string name="web_gui_setting_anon_login_title">Anonymous Login</string>
+    <string name="web_gui_setting_anon_login_desc">Set if you want a passwordless login</string>
+    <string name="web_gui_setting_user_title">Username</string>
+    <string name="web_gui_setting_user_desc">rclone web server username</string>
+    <string name="web_gui_setting_pass_title">Password</string>
+    <string name="web_gui_setting_pass_desc">rclone web server password</string>
+
+    <string name="web_gui_setting_category_server_conf">Server Configuration</string>
+    <string name="web_gui_setting_server_title">Server Address</string>
+    <string name="web_gui_setting_server_desc">rclone web server address</string>
+
+    <string name="web_gui_setting_category_web_interface">Web Interface</string>
+    <string name="web_gui_setting_gui_url_title">GUI Release URL</string>
+    <string name="web_gui_setting_gui_url_desc">Set URL to fetch the rclone-web-gui files from</string>
+
 </resources>

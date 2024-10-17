@@ -44,6 +44,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import ca.pkay.rcloneexplorer.data.model.WebGuiSettingsState;
 import ca.pkay.rcloneexplorer.Database.json.Exporter;
 import ca.pkay.rcloneexplorer.Database.json.SharedPreferencesBackup;
 import ca.pkay.rcloneexplorer.Items.FileItem;
@@ -656,6 +657,44 @@ public class Rclone {
             // todo: guard callers against null result
             return null;
         }
+    }
+
+    public String[] webGui(WebGuiSettingsState data, String addr) {
+        String server_addr;
+        if (addr.isBlank()) {
+            server_addr = data.getAddr();
+        } else {
+            server_addr= addr;
+        }
+
+        String server_username = data.getUser();
+        String server_password = data.getPass();
+        String server_guiReleaseUrl = data.getGuiReleaseUrl();
+        boolean server_isAnonLogin = data.isAnonymousLogin();
+
+        ArrayList<String> params = new ArrayList<>(Arrays.asList("rcd",
+                "--rc-web-gui", "--rc-web-gui-no-open-browser", "--log-format", "time"));
+
+        if (!server_addr.isBlank()) {
+            params.add("--rc-addr");
+            params.add(server_addr);
+        }
+
+        if (server_isAnonLogin) {
+            params.add("--rc-no-auth");
+        } else if (!server_username.isBlank() && !server_password.isBlank()) {
+            params.add("--rc-user");
+            params.add(server_username);
+            params.add("--rc-pass");
+            params.add(server_password);
+        }
+
+        if (!server_guiReleaseUrl.isBlank()) {
+            params.add("--rc-web-fetch-url");
+            params.add(server_guiReleaseUrl);
+        }
+
+        return createCommandWithOptions(params);
     }
 
     public Process serve(int protocol, int port, boolean allowRemoteAccess, String user, String password, RemoteItem remote, String servePath) {

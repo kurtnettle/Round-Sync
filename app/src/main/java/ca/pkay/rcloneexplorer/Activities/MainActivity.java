@@ -62,6 +62,7 @@ import ca.pkay.rcloneexplorer.Database.json.SharedPreferencesBackup;
 import ca.pkay.rcloneexplorer.Dialogs.Dialogs;
 import ca.pkay.rcloneexplorer.Dialogs.InputDialog;
 import ca.pkay.rcloneexplorer.Dialogs.LoadingDialog;
+import ca.pkay.rcloneexplorer.Fragments.WebGuiFragment;
 import ca.pkay.rcloneexplorer.Fragments.FileExplorerFragment;
 import ca.pkay.rcloneexplorer.Fragments.LogFragment;
 import ca.pkay.rcloneexplorer.Fragments.PermissionFragment;
@@ -368,6 +369,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_trigger:
             case R.id.nav_logs:
             case R.id.nav_permissions:
+            case R.id.nav_webgui:
                 SharedPreferencesUtil.Companion.setLastOpenFragment(this, id);
                 break;
             case R.id.nav_import:
@@ -398,6 +400,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_permissions:
                 startPermissionFragment();
+                break;
+            case R.id.nav_webgui:
+                startWebGuiFragment();
                 break;
         }
     }
@@ -435,6 +440,10 @@ public class MainActivity extends AppCompatActivity
 
     private void startPermissionFragment() {
         startFragment(PermissionFragment.Companion.newInstance());
+    }
+
+    private void startWebGuiFragment() {
+        startFragment(new WebGuiFragment());
     }
 
     private void startFragment(Fragment fragmentToStart) {

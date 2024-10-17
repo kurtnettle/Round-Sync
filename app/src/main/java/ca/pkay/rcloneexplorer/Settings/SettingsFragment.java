@@ -57,6 +57,17 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    private void openWebSettingsScreen() {
+        WebGuiSettingsFragment webGuiSettingsFragment = WebGuiSettingsFragment.newInstance();
+
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flFragment, webGuiSettingsFragment)
+                    .commit();
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -83,6 +94,8 @@ public class SettingsFragment extends Fragment {
 
         view.findViewById(R.id.importSettings).setOnClickListener(v -> startActivity(getImportIntent()));
         view.findViewById(R.id.exportSettings).setOnClickListener(v -> startActivity(getExportIntent()));
+
+        view.findViewById(R.id.web_settings).setOnClickListener(v -> openWebSettingsScreen());
     }
 
     private Intent getImportIntent() {
